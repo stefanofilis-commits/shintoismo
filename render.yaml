@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: shinto-the-way-of-the-kami
+    runtime: static
+    buildCommand: (npm ci || npm install) && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 20
