@@ -4,7 +4,7 @@ import FloatingKatana from "./FloatingKatana";
 import AnimeCharacter from "./AnimeCharacter";
 import FlameTransition from "./FlameTransition";
 
-type Phase = "idle" | "summon" | "draw" | "slash" | "split";
+type Phase = "idle" | "summon" | "bloom" | "split";
 
 export default function CinematicIntro({ onReveal, onDone }: { onReveal: () => void; onDone: () => void }) {
   const [phase, setPhase] = useState<Phase>("idle");
@@ -19,16 +19,17 @@ export default function CinematicIntro({ onReveal, onDone }: { onReveal: () => v
 
   const start = () => {
     if (phase !== "idle") return;
+
     if (reduce) {
       setPhase("split");
       onReveal();
       at(500, onDone);
       return;
     }
+
     setPhase("summon");
-    at(1100, () => setPhase("draw"));
-    at(1900, () => setPhase("slash"));
-    at(2400, () => {
+    at(1200, () => setPhase("bloom"));
+    at(2350, () => {
       setPhase("split");
       onReveal();
     });
@@ -36,21 +37,22 @@ export default function CinematicIntro({ onReveal, onDone }: { onReveal: () => v
   };
 
   const skip = () => {
+    timers.current.forEach((t) => clearTimeout(t));
+    timers.current = [];
     onReveal();
     onDone();
   };
 
-  const on = phase !== "idle";
-  const charged = phase === "draw" || phase === "slash";
+  const characterVisible = phase !== "idle";
 
   return (
     <div className="intro" role="dialog" aria-label="Introduzione cinematografica">
       {phase !== "split" ? (
-        <div className={`stage night ${on ? "stage--on" : ""}`}>
+        <div className={`stage night ${characterVisible ? "stage--on" : ""}`}>
           <div className="fog fog--a" />
           <div className="fog fog--b" />
-          <FloatingKatana charged={charged} />
-          <AnimeCharacter show={on} lunge={charged} />
+          <FloatingKatana charged={false} />
+          <AnimeCharacter show={characterVisible} lunge={false} />
           <div className="titles">
             <p className="jp" lang="ja">「神道」</p>
             <h1>SHINTOISMO</h1>
@@ -81,7 +83,7 @@ export default function CinematicIntro({ onReveal, onDone }: { onReveal: () => v
           <motion.div className="flash" initial={{ opacity: 1 }} animate={{ opacity: 0 }} transition={{ duration: 0.6 }} />
         </>
       )}
-      {(phase === "slash" || phase === "split") && <FlameTransition />}
+      {(phase === "bloom" || phase === "split") && <FlameTransition />}
     </div>
   );
 }
