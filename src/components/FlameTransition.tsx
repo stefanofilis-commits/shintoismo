@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import { motion } from "framer-motion";
 
 const trails = [
   { w: 54, c: "#a92720", b: 16, d: 0 },
@@ -13,16 +12,17 @@ export default function FlameTransition() {
     <div className="flame" aria-hidden="true">
       {trails.map((t) => (
         <svg key={t.w} viewBox="0 0 100 100" preserveAspectRatio="none" style={{ filter: t.b ? `blur(${t.b}px)` : undefined }}>
-          <motion.path
+          {/* Il tratto si "disegna" con stroke-dasharray (CSS .flame__trail): nessuna proprietà pathLength di Framer Motion. */}
+          <path
+            className="flame__trail"
             d="M63.4 -6L36.6 106"
             fill="none"
             stroke={t.c}
             strokeWidth={t.w}
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 0.45, delay: t.d, ease: "easeIn" }}
+            pathLength={1}
+            style={{ animationDelay: `${t.d}s` }}
           />
         </svg>
       ))}
