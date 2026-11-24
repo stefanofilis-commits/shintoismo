@@ -1,13 +1,19 @@
 import { motion } from "framer-motion";
 import { bibliography, type Chapter } from "../data/shintoContent";
+import ChapterSticker from "./ChapterSticker";
 
 export default function NotebookChapter({ chapter: c, index }: { chapter: Chapter; index: number }) {
   return (
     <article className="spread">
       <div className="page page--l">
-        <p className="chap-no">CAPITOLO {c.no}</p>
-        <h2>{c.title}</h2>
-        <p className="chap-sub">{c.subtitle}</p>
+        <div className="chapter-head">
+          <div className="chapter-head__copy">
+            <p className="chap-no">CAPITOLO {c.no}</p>
+            <h2>{c.title}</h2>
+            <p className="chap-sub">{c.subtitle}</p>
+          </div>
+          <ChapterSticker index={index} />
+        </div>
         <span className="chap-kanji" lang="ja" aria-hidden="true">{c.kanji}</span>
         <aside className="panel">
           <h3>Da ricordare</h3>

@@ -498,3 +498,298 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     stroke-dashoffset: 0;
   }
 }
+
+
+/* Sakura-inspired anime light slash and diagonal screen burn reveal. */
+.stage--charged .katana3d {
+  filter: drop-shadow(0 0 22px rgba(255, 125, 55, .78))
+    drop-shadow(0 0 48px rgba(174, 41, 45, .48));
+  transition: filter .35s ease;
+}
+.stage--charged .titles {
+  opacity: .38;
+  transform: translateY(10px);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.stage--split {
+  filter: brightness(.74) saturate(1.22);
+}
+.split-open {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 1500px;
+}
+.split-panel {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity, filter;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(255, 128, 54, .18), transparent 36%),
+    radial-gradient(ellipse at 50% 50%, rgba(174, 41, 45, .28), transparent 60%),
+    linear-gradient(135deg, rgba(5, 4, 8, .98), rgba(35, 9, 17, .96) 52%, rgba(7, 6, 10, .98));
+  filter: saturate(1.2);
+  transform-style: preserve-3d;
+}
+.split-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 48% 51%, rgba(255, 177, 86, .28), transparent 28%),
+    repeating-radial-gradient(ellipse at 48% 51%, transparent 0 13px, rgba(255, 111, 45, .045) 15px 17px);
+  mix-blend-mode: screen;
+  opacity: .8;
+}
+.split-panel::after {
+  content: "";
+  position: absolute;
+  inset: -4%;
+  background:
+    radial-gradient(ellipse at 45% 55%, rgba(255, 241, 198, .86), rgba(255, 132, 55, .54) 16%, rgba(176, 38, 31, .24) 34%, transparent 58%);
+  filter: blur(18px);
+  opacity: .72;
+  mix-blend-mode: screen;
+}
+.split-panel--upper {
+  clip-path: polygon(0 0, 100% 0, 93.4% 8.4%, 6.8% 90.4%, 0 96.8%);
+  transform-origin: 50% 50%;
+}
+.split-panel--lower {
+  clip-path: polygon(6.8% 90.4%, 93.4% 8.4%, 100% 3.2%, 100% 100%, 0 100%, 0 96.8%);
+  transform-origin: 50% 50%;
+}
+
+/* The slash is a fictional graphic transition, not realistic sword choreography. */
+.flame {
+  z-index: 9;
+  overflow: hidden;
+  isolation: isolate;
+  /* Keep the trail glowing while both screen sections peel away. */
+  animation: flameOut .55s 2.1s forwards;
+}
+.flame__wash {
+  position: absolute;
+  inset: -24%;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: radial-gradient(ellipse at 50% 50%,
+    rgba(255, 248, 225, .9) 0%,
+    rgba(255, 205, 126, .7) 13%,
+    rgba(233, 103, 55, .48) 31%,
+    rgba(174, 41, 45, .2) 51%,
+    transparent 72%);
+  animation: flameWash 1.45s ease-out forwards;
+}
+.flame__bloom {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(92vmax, 1280px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(.06);
+  filter: blur(24px);
+  opacity: .95;
+  background: radial-gradient(circle,
+    rgba(255, 248, 225, .96) 0%,
+    rgba(255, 194, 104, .76) 19%,
+    rgba(223, 79, 46, .5) 43%,
+    rgba(174, 41, 45, .16) 65%,
+    transparent 73%);
+  animation: flameBloom 1.55s cubic-bezier(.18, .7, .2, 1) forwards;
+}
+.flame__ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(48vmax, 720px);
+  aspect-ratio: 1;
+  border: 2px solid rgba(255, 220, 157, .82);
+  border-radius: 50%;
+  box-shadow: 0 0 24px rgba(255, 157, 73, .5), inset 0 0 18px rgba(255, 205, 126, .22);
+  transform: translate(-50%, -50%) scale(.12);
+  opacity: 0;
+  animation: flameRing 1.35s cubic-bezier(.15, .65, .25, 1) .08s forwards;
+}
+.flame__smoke {
+  position: absolute;
+  inset: -15%;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse at 25% 72%, rgba(24, 13, 15, .52), transparent 35%),
+    radial-gradient(ellipse at 78% 24%, rgba(24, 13, 15, .4), transparent 34%);
+  filter: blur(28px);
+  animation: burnSmoke 1.65s ease-out .34s forwards;
+}
+.flame__slash-svg {
+  position: absolute;
+  inset: -3%;
+  width: 106%;
+  height: 106%;
+  z-index: 4;
+  overflow: visible;
+  filter: url(#katanaSlashGlow);
+}
+.flame__slash {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: katanaSlashDraw .96s cubic-bezier(.18, .72, .22, 1) .02s forwards;
+}
+.flame__slash--char {
+  stroke: rgba(22, 8, 9, .78);
+  stroke-width: 138;
+  filter: blur(25px);
+}
+.flame__slash--outer {
+  stroke: rgba(202, 49, 32, .84);
+  stroke-width: 94;
+  filter: blur(17px);
+}
+.flame__slash--middle {
+  stroke: url(#katanaSlashGradient);
+  stroke-width: 37;
+  filter: drop-shadow(0 0 15px rgba(255, 131, 53, .98));
+}
+.flame__slash--core {
+  stroke: #fff5df;
+  stroke-width: 7;
+  filter: drop-shadow(0 0 11px #fff0cf);
+}
+@keyframes katanaSlashDraw {
+  0% { stroke-dashoffset: 1; opacity: .05; }
+  10% { opacity: 1; }
+  72% { stroke-dashoffset: .12; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: .24; }
+}
+@keyframes flameWash {
+  0% { opacity: 0; transform: scale(.65); }
+  24% { opacity: 1; }
+  100% { opacity: .12; transform: scale(1.16); }
+}
+@keyframes flameBloom {
+  0% { transform: translate(-50%, -50%) scale(.06); opacity: .95; }
+  72% { opacity: .75; }
+  100% { transform: translate(-50%, -50%) scale(2.15); opacity: 0; }
+}
+@keyframes flameRing {
+  0% { transform: translate(-50%, -50%) scale(.12); opacity: 0; }
+  22% { opacity: .95; }
+  100% { transform: translate(-50%, -50%) scale(2.25); opacity: 0; }
+}
+@keyframes burnSmoke {
+  0% { opacity: 0; transform: scale(.7); }
+  28% { opacity: .8; }
+  100% { opacity: 0; transform: scale(1.22); }
+}
+
+/* Original die-cut chapter stickers and paper-page turning with the outgoing
+   chapter's real content printed on the leaf. */
+.chapter-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.chapter-head__copy {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.chapter-sticker {
+  flex: 0 0 clamp(100px, 26%, 148px);
+  width: clamp(100px, 26%, 148px);
+  margin: 2px 0 14px 4px;
+  text-align: center;
+  transform: rotate(2deg);
+  filter: drop-shadow(0 7px 8px rgba(48, 31, 20, .2));
+  transition: transform .28s ease, filter .28s ease;
+}
+.chapter-sticker:hover {
+  transform: rotate(-1deg) translateY(-3px) scale(1.035);
+  filter: drop-shadow(0 11px 12px rgba(48, 31, 20, .25));
+}
+.chapter-sticker svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.chapter-sticker figcaption {
+  display: block;
+  margin-top: 3px;
+  color: #8c5542;
+  font: 700 .52rem var(--sans);
+  letter-spacing: .2em;
+}
+.chapter-head .chap-no { margin-top: 1px; }
+.chapter-head h2 { max-width: 19ch; }
+
+.page-turn-sheet__front { overflow: hidden; }
+.page-turn-sheet__content {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 200%;
+  height: 100%;
+  pointer-events: none;
+}
+.page-turn-sheet--forward .page-turn-sheet__content {
+  transform: translateX(-50%);
+}
+.page-turn-sheet--backward .page-turn-sheet__content {
+  transform: translateX(0);
+}
+.page-turn-sheet__content .spread {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.page-turn-sheet__content .page {
+  overflow: hidden;
+}
+.page-turn-sheet__content .chapter-sticker {
+  filter: none;
+}
+
+@media (max-width: 860px) {
+  .chapter-sticker { flex-basis: 112px; width: 112px; }
+  .page-turn-sheet--forward,
+  .page-turn-sheet--backward {
+    left: 0;
+    width: 100%;
+    transform-origin: center center;
+  }
+  .page-turn-sheet__content {
+    width: 100%;
+  }
+  .page-turn-sheet--forward .page-turn-sheet__content,
+  .page-turn-sheet--backward .page-turn-sheet__content {
+    transform: none;
+  }
+}
+@media (max-width: 560px) {
+  .chapter-head { gap: 8px; }
+  .chapter-sticker {
+    flex-basis: 94px;
+    width: 94px;
+    margin-right: -5px;
+  }
+  .chapter-sticker figcaption { font-size: .46rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-sticker,
+  .chapter-sticker:hover {
+    transition: none;
+    transform: none;
+  }
+  .flame__slash {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

@@ -38,8 +38,8 @@ export default function CinematicIntro({
       return;
     }
 
-    // The character enters first; the katana's light and the graphic slash
-    // then lead into the split-screen reveal.
+    // The character is revealed first; the slash is a stylized screen effect,
+    // not a depiction of realistic weapon use.
     at(850, () => setPhase("bloom"));
     at(2050, () => {
       setPhase("split");
@@ -72,7 +72,6 @@ export default function CinematicIntro({
       >
         <div className="fog fog--a" />
         <div className="fog fog--b" />
-
         <FloatingKatana charged={charged} />
         <AnimeCharacter show={characterVisible} lunge={charged} />
 
@@ -84,31 +83,25 @@ export default function CinematicIntro({
         </div>
 
         {phase === "idle" && (
-          <button
-            className="hit"
-            onClick={start}
-            aria-label="Clicca per iniziare"
-          />
+          <button className="hit" onClick={start} aria-label="Clicca per iniziare" />
         )}
 
-        <button className="skip" onClick={skip}>
-          SALTA INTRO
-        </button>
+        <button className="skip" onClick={skip}>SALTA INTRO</button>
       </div>
 
       {phase === "split" && (
         <div className="split-open" aria-hidden="true">
           <motion.div
-            className="split-panel split-panel--left"
-            initial={{ x: 0 }}
-            animate={{ x: "-108%" }}
-            transition={{ duration: 1.35, ease: [0.72, 0, 0.18, 1] }}
+            className="split-panel split-panel--upper"
+            initial={{ x: 0, y: 0, rotate: 0, opacity: 1, scale: 1 }}
+            animate={{ x: "-108%", y: "-72%", rotate: -4, opacity: 0, scale: 1.05 }}
+            transition={{ duration: 1.45, ease: [0.72, 0, 0.18, 1] }}
           />
           <motion.div
-            className="split-panel split-panel--right"
-            initial={{ x: 0 }}
-            animate={{ x: "108%" }}
-            transition={{ duration: 1.35, ease: [0.72, 0, 0.18, 1] }}
+            className="split-panel split-panel--lower"
+            initial={{ x: 0, y: 0, rotate: 0, opacity: 1, scale: 1 }}
+            animate={{ x: "108%", y: "72%", rotate: 4, opacity: 0, scale: 1.05 }}
+            transition={{ duration: 1.45, ease: [0.72, 0, 0.18, 1] }}
           />
         </div>
       )}

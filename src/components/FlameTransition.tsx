@@ -3,18 +3,18 @@ import type { CSSProperties } from "react";
 const slashPath =
   "M 68 904 C 176 790, 268 666, 390 574 S 685 363, 934 84";
 
-const sparks = Array.from({ length: 42 }, (_, i) => {
-  const angle = (i / 42) * Math.PI * 2;
-  const radius = 15 + (i % 6) * 4.2;
-  const distance = 82 + (i % 5) * 30;
+// Embers travel along the diagonal light trail and scatter outward from it.
+const sparks = Array.from({ length: 48 }, (_, i) => {
+  const t = i / 47;
+  const jitter = Math.sin(i * 12.9898) * 3.2;
 
   return {
-    left: 50 + Math.cos(angle) * radius,
-    top: 50 + Math.sin(angle) * radius * 0.68,
-    dx: Math.cos(angle) * distance,
-    dy: Math.sin(angle) * (58 + (i % 5) * 20) - 18,
-    delay: 0.08 + (i % 10) * 0.035,
-    size: 3 + (i % 4) * 1.4,
+    left: 6.8 + t * 86.6 + jitter,
+    top: 90.4 - t * 82 + Math.cos(i * 7.17) * 3.2,
+    dx: (t - 0.5) * 104 + Math.cos(i * 2.3) * 30,
+    dy: Math.sin(i * 3.1) * 58 + (t - 0.5) * 34,
+    delay: 0.12 + (i % 11) * 0.035,
+    size: 2.6 + (i % 5) * 1.25,
   };
 });
 
@@ -24,6 +24,7 @@ export default function FlameTransition() {
       <div className="flame__wash" />
       <div className="flame__bloom" />
       <div className="flame__ring" />
+      <div className="flame__smoke" />
 
       <svg
         className="flame__slash-svg"
@@ -33,7 +34,7 @@ export default function FlameTransition() {
       >
         <defs>
           <filter id="katanaSlashGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="12" result="blur" />
+            <feGaussianBlur stdDeviation="15" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -47,21 +48,10 @@ export default function FlameTransition() {
           </linearGradient>
         </defs>
 
-        <path
-          className="flame__slash flame__slash--outer"
-          d={slashPath}
-          pathLength="1"
-        />
-        <path
-          className="flame__slash flame__slash--middle"
-          d={slashPath}
-          pathLength="1"
-        />
-        <path
-          className="flame__slash flame__slash--core"
-          d={slashPath}
-          pathLength="1"
-        />
+        <path className="flame__slash flame__slash--char" d={slashPath} pathLength="1" />
+        <path className="flame__slash flame__slash--outer" d={slashPath} pathLength="1" />
+        <path className="flame__slash flame__slash--middle" d={slashPath} pathLength="1" />
+        <path className="flame__slash flame__slash--core" d={slashPath} pathLength="1" />
       </svg>
 
       {sparks.map((spark, i) => (

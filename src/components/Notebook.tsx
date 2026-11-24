@@ -9,11 +9,11 @@ export default function Notebook({ ready }: { ready: boolean }) {
   const n = chapters.length;
   const [open, setOpen] = useState(false);
   const [idx, setIdx] = useState(-1); // -1 indice, 0..n-1 capitoli, n bibliografia
+  const [turnFrom, setTurnFrom] = useState<number | null>(null);
   const [dir, setDir] = useState(1);
   const [turning, setTurning] = useState(false);
   const top = useRef<HTMLDivElement>(null);
   const locked = useRef(false);
-  const pendingIndex = useRef<number | null>(null);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -21,6 +21,14 @@ export default function Notebook({ ready }: { ready: boolean }) {
     const t = window.setTimeout(() => setOpen(true), 1300);
     return () => clearTimeout(t);
   }, [ready]);
+
+  const renderSpread = (pageIndex: number) => {
+    if (pageIndex === -1) {
+      return <NotebookContents onOpen={() => undefined} onBib={() => undefined} />;
+    }
+    if (pageIndex === n) return <Bibliography page={n + 3} />;
+    return <NotebookChapter chapter={chapters[pageIndex]} index={pageIndex} />;
+  };
 
   const go = useCallback(
     (i: number, direction: number) => {
@@ -38,8 +46,10 @@ export default function Notebook({ ready }: { ready: boolean }) {
         return;
       }
 
-      // Keep the current spread visible while the paper leaf turns.
-      pendingIndex.current = i;
+      // Put the destination spread underneath, while the outgoing page itself
+      // becomes the animated leaf on top. This makes the turn read like a book.
+      setTurnFrom(idx);
+      setIdx(i);
       locked.current = true;
       setTurning(true);
     },
@@ -47,11 +57,9 @@ export default function Notebook({ ready }: { ready: boolean }) {
   );
 
   const finishTurn = useCallback(() => {
-    const next = pendingIndex.current;
-    if (next !== null) setIdx(next);
-    pendingIndex.current = null;
-    locked.current = false;
     setTurning(false);
+    setTurnFrom(null);
+    locked.current = false;
   }, []);
 
   useEffect(() => {
@@ -115,19 +123,17 @@ export default function Notebook({ ready }: { ready: boolean }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.24, ease: "easeOut" }}
               >
-                {idx === -1 && <NotebookContents onOpen={(i) => go(i, 1)} onBib={() => go(n, 1)} />}
-                {idx >= 0 && idx < n && <NotebookChapter chapter={chapters[idx]} index={idx} />}
-                {idx === n && <Bibliography page={n + 3} />}
+                {renderSpread(idx)}
               </motion.div>
 
-              {turning && (
+              {turning && turnFrom !== null && (
                 <motion.div
-                  key={`page-turn-${idx}-${pendingIndex.current}`}
+                  key={`page-turn-${turnFrom}-to-${idx}`}
                   className={`page-turn-sheet page-turn-sheet--${dir > 0 ? "forward" : "backward"}`}
                   initial={{ rotateY: 0, filter: "brightness(1)" }}
                   animate={{
                     rotateY: dir > 0 ? -180 : 180,
-                    filter: "brightness(.86)",
+                    filter: "brightness(.82)",
                   }}
                   transition={{ duration: 1.02, ease: [0.64, 0.02, 0.24, 1] }}
                   onAnimationComplete={finishTurn}
@@ -138,9 +144,9 @@ export default function Notebook({ ready }: { ready: boolean }) {
                   aria-hidden="true"
                 >
                   <span className="page-turn-sheet__face page-turn-sheet__front">
-                    <span className="page-turn-sheet__stamp" lang="ja">神道</span>
-                    <span className="page-turn-sheet__ruled" />
-                    <span className="page-turn-sheet__folio">SHINTOISMO</span>
+                    <span className="page-turn-sheet__content">
+                      {renderSpread(turnFrom)}
+                    </span>
                   </span>
                   <span className="page-turn-sheet__face page-turn-sheet__back">
                     <span className="page-turn-sheet__stamp" lang="ja">神道</span>
