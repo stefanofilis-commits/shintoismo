@@ -793,3 +793,49 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     stroke-dashoffset: 0;
   }
 }
+
+
+/* Monochrome sumi-e chapter stickers: black brush-ink illustrations on warm paper. */
+.chapter-sticker {
+  flex: 0 0 clamp(104px, 27%, 154px);
+  width: clamp(104px, 27%, 154px);
+  margin: 2px 0 14px 4px;
+  text-align: center;
+  transform: rotate(1.5deg);
+  filter: drop-shadow(0 7px 8px rgba(25, 21, 18, .22));
+  transition: transform .28s ease, filter .28s ease;
+}
+.chapter-sticker:hover {
+  transform: rotate(-1deg) translateY(-3px) scale(1.035);
+  filter: drop-shadow(0 11px 12px rgba(25, 21, 18, .28));
+}
+.chapter-sticker svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.chapter-sticker figcaption {
+  display: block;
+  margin-top: 3px;
+  color: #292522;
+  font: 700 .52rem var(--sans);
+  letter-spacing: .2em;
+}
+@media (max-width: 860px) {
+  .chapter-sticker { flex-basis: 112px; width: 112px; }
+}
+@media (max-width: 560px) {
+  .chapter-sticker {
+    flex-basis: 94px;
+    width: 94px;
+    margin-right: -5px;
+  }
+  .chapter-sticker figcaption { font-size: .46rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-sticker,
+  .chapter-sticker:hover {
+    transition: none;
+    transform: none;
+  }
+}
