@@ -794,32 +794,74 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   }
 }
 
-
-/* Monochrome sumi-e chapter stickers: black brush-ink illustrations on warm paper. */
+/* Historical Japanese artwork stickers with a monochrome archival-paper treatment. */
 .chapter-sticker {
   flex: 0 0 clamp(104px, 27%, 154px);
   width: clamp(104px, 27%, 154px);
   margin: 2px 0 14px 4px;
   text-align: center;
-  transform: rotate(1.5deg);
+  transform: rotate(1.35deg);
   filter: drop-shadow(0 7px 8px rgba(25, 21, 18, .22));
   transition: transform .28s ease, filter .28s ease;
 }
 .chapter-sticker:hover {
-  transform: rotate(-1deg) translateY(-3px) scale(1.035);
+  transform: rotate(-.8deg) translateY(-3px) scale(1.035);
   filter: drop-shadow(0 11px 12px rgba(25, 21, 18, .28));
 }
-.chapter-sticker svg {
+.chapter-sticker__frame {
+  position: relative;
   display: block;
   width: 100%;
-  height: auto;
+  aspect-ratio: 1.28 / 1;
+  overflow: hidden;
+  padding: 5px;
+  background: #eee5d4;
+  border: 1px solid rgba(48, 39, 29, .38);
+  box-shadow: inset 0 0 0 2px rgba(255, 252, 242, .75), 0 2px 3px rgba(25, 21, 18, .13);
+}
+.chapter-sticker__frame::after {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 1px solid rgba(35, 30, 25, .18);
+  pointer-events: none;
+}
+.chapter-sticker__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.15) sepia(.18) brightness(.94);
+  mix-blend-mode: multiply;
+}
+.chapter-sticker--2 .chapter-sticker__image {
+  object-position: center 78%;
+  transform: scale(1.12);
+}
+.chapter-sticker--4 .chapter-sticker__image {
+  object-position: center 42%;
+}
+.chapter-sticker--8 .chapter-sticker__image {
+  object-position: center 38%;
 }
 .chapter-sticker figcaption {
   display: block;
-  margin-top: 3px;
+  margin-top: 4px;
   color: #292522;
   font: 700 .52rem var(--sans);
-  letter-spacing: .2em;
+  letter-spacing: .18em;
+}
+.chapter-sticker__credit {
+  display: block;
+  margin-top: 2px;
+  color: #776d60;
+  font: 400 .42rem var(--sans);
+  line-height: 1.25;
+  text-decoration: none;
+}
+.chapter-sticker__credit:hover {
+  color: #211d1a;
+  text-decoration: underline;
 }
 @media (max-width: 860px) {
   .chapter-sticker { flex-basis: 112px; width: 112px; }
@@ -831,6 +873,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     margin-right: -5px;
   }
   .chapter-sticker figcaption { font-size: .46rem; }
+  .chapter-sticker__credit { font-size: .38rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .chapter-sticker,
