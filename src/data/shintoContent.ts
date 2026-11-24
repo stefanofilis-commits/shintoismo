@@ -186,3 +186,41 @@ export const bibliography = [
   "Jinja Honchō, Associazione dei santuari shintoisti (jinjahoncho.or.jp).",
   "Encyclopaedia Britannica, voce “Shinto” (britannica.com).",
 ];
+
+/* ---- Tipi e dati per i componenti Section, Navbar e Conclusion ----
+   Derivati dai capitoli sopra: nessun testo duplicato (tranne la breve conclusione). */
+export type SectionItem = { term: string; jp?: string; text: string; tag?: string };
+export type SectionData = {
+  id: string;
+  no: string;
+  title: string;
+  kanji: string;
+  nav?: string;
+  paragraphs: string[];
+  items: SectionItem[];
+  layout?: "grid" | "timeline";
+  quote?: string;
+  tone?: string;
+};
+export type Conclusion = { title: string; text: string; kanji: string; translation: string; sources: string[] };
+
+export const sections: SectionData[] = chapters.map((c): SectionData => ({
+  id: `capitolo-${c.no}`,
+  no: c.no,
+  title: c.title,
+  kanji: c.kanji,
+  nav: c.title,
+  paragraphs: c.paragraphs,
+  layout: c.timeline ? "timeline" : "grid",
+  items: c.timeline
+    ? c.timeline.map((t) => ({ term: t.when, text: t.what }))
+    : c.terms.map((t) => ({ term: t.k, jp: t.jp, text: t.v })),
+}));
+
+export const conclusion: Conclusion = {
+  title: "Conclusione",
+  text: "Lo Shintoismo non ha un fondatore, né un unico libro sacro, né dogmi da imparare: vive nei riti, nei santuari e nel rispetto per la natura e per gli antenati. Per questo in Giappone è sentito più come una tradizione condivisa che come una dottrina.",
+  kanji: "神道",
+  translation: "Shintō: la via dei kami.",
+  sources: bibliography,
+};
