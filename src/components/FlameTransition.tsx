@@ -1,42 +1,36 @@
 import type { CSSProperties } from "react";
 
-const trails = [
-  { w: 54, c: "#a92720", b: 16, d: 0 },
-  { w: 30, c: "#e9852f", b: 9, d: 0.03 },
-  { w: 13, c: "#ffd27a", b: 3, d: 0.06 },
-  { w: 4, c: "#fff6e0", b: 0, d: 0.09 },
-];
+const sparks = Array.from({ length: 36 }, (_, i) => {
+  const angle = (i / 36) * Math.PI * 2;
+  const radius = 17 + (i % 5) * 4.5;
+  const distance = 70 + (i % 4) * 34;
+
+  return {
+    left: 50 + Math.cos(angle) * radius,
+    top: 50 + Math.sin(angle) * radius * 0.68,
+    dx: Math.cos(angle) * distance,
+    dy: Math.sin(angle) * (52 + (i % 5) * 22) - 24,
+    delay: 0.12 + (i % 9) * 0.035,
+  };
+});
 
 export default function FlameTransition() {
   return (
     <div className="flame" aria-hidden="true">
-      {trails.map((t) => (
-        <svg key={t.w} viewBox="0 0 100 100" preserveAspectRatio="none" style={{ filter: t.b ? `blur(${t.b}px)` : undefined }}>
-          {/* Il tratto si "disegna" con stroke-dasharray (CSS .flame__trail): nessuna proprietà pathLength di Framer Motion. */}
-          <path
-            className="flame__trail"
-            d="M63.4 -6L36.6 106"
-            fill="none"
-            stroke={t.c}
-            strokeWidth={t.w}
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            pathLength={1}
-            style={{ animationDelay: `${t.d}s` }}
-          />
-        </svg>
-      ))}
-      {Array.from({ length: 34 }, (_, i) => (
+      <div className="flame__wash" />
+      <div className="flame__bloom" />
+      <div className="flame__ring" />
+      {sparks.map((spark, i) => (
         <i
           key={i}
           className="ember"
           style={
             {
-              left: `${37 + ((i * 7) % 27)}%`,
-              top: `${(i * 13) % 100}%`,
-              animationDelay: `${0.2 + (i % 9) * 0.05}s`,
-              "--dx": `${(i % 2 ? 1 : -1) * (40 + ((i * 17) % 170))}px`,
-              "--dy": `${-70 - ((i * 29) % 230)}px`,
+              left: `${spark.left}%`,
+              top: `${spark.top}%`,
+              animationDelay: `${spark.delay}s`,
+              "--dx": `${spark.dx}px`,
+              "--dy": `${spark.dy}px`,
             } as CSSProperties
           }
         />
