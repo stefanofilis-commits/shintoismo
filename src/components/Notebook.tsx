@@ -125,17 +125,28 @@ export default function Notebook({ ready }: { ready: boolean }) {
                   key={`page-turn-${idx}-${pendingIndex.current}`}
                   className={`page-turn-sheet page-turn-sheet--${dir > 0 ? "forward" : "backward"}`}
                   initial={{ rotateY: 0, filter: "brightness(1)" }}
-                  animate={{ rotateY: dir > 0 ? -180 : 180, filter: "brightness(.82)" }}
-                  transition={{ duration: 0.82, ease: [0.68, 0.04, 0.22, 1] }}
+                  animate={{
+                    rotateY: dir > 0 ? -180 : 180,
+                    filter: "brightness(.86)",
+                  }}
+                  transition={{ duration: 1.02, ease: [0.64, 0.02, 0.24, 1] }}
                   onAnimationComplete={finishTurn}
                   style={{
                     transformStyle: "preserve-3d",
-                    backfaceVisibility: "hidden",
+                    backfaceVisibility: "visible",
                   }}
                   aria-hidden="true"
                 >
-                  <span className="page-turn-sheet__face page-turn-sheet__front" />
-                  <span className="page-turn-sheet__face page-turn-sheet__back" />
+                  <span className="page-turn-sheet__face page-turn-sheet__front">
+                    <span className="page-turn-sheet__stamp" lang="ja">神道</span>
+                    <span className="page-turn-sheet__ruled" />
+                    <span className="page-turn-sheet__folio">SHINTOISMO</span>
+                  </span>
+                  <span className="page-turn-sheet__face page-turn-sheet__back">
+                    <span className="page-turn-sheet__stamp" lang="ja">神道</span>
+                    <span className="page-turn-sheet__ruled" />
+                    <span className="page-turn-sheet__folio">LA VIA DEI KAMI</span>
+                  </span>
                   <span className="page-turn-sheet__edge" />
                 </motion.div>
               )}

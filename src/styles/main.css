@@ -287,3 +287,214 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   22%{opacity:.9}
   100%{transform:translate(-50%,-50%) scale(2.1);opacity:0}
 }
+
+
+/* Cinematic katana slash + opening split */
+.stage {
+  isolation: isolate;
+}
+.stage--charged .katana3d {
+  filter: drop-shadow(0 0 22px rgba(255, 125, 55, .72))
+    drop-shadow(0 0 46px rgba(174, 41, 45, .42));
+  transition: filter .35s ease;
+}
+.stage--charged .titles {
+  opacity: .42;
+  transform: translateY(8px);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.stage--split .katana3d {
+  opacity: .18;
+  transition: opacity .2s ease;
+}
+.stage--split .fog {
+  opacity: .22;
+}
+.split-open {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 1400px;
+}
+.split-panel {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(180, 49, 36, .32), transparent 48%),
+    linear-gradient(135deg, rgba(5, 4, 8, .96), rgba(35, 9, 17, .94) 52%, rgba(7, 6, 10, .98));
+  backdrop-filter: blur(3px) saturate(1.18);
+  -webkit-backdrop-filter: blur(3px) saturate(1.18);
+}
+.split-panel--left {
+  clip-path: polygon(0 0, 54% 0, 44% 100%, 0 100%);
+}
+.split-panel--right {
+  clip-path: polygon(54% 0, 100% 0, 100% 100%, 44% 100%);
+}
+.split-panel--left::after,
+.split-panel--right::after {
+  content: "";
+  position: absolute;
+  top: -8%;
+  height: 116%;
+  width: 5px;
+  background: linear-gradient(180deg, transparent, rgba(255, 244, 214, .96) 35%, #ff873d 62%, transparent);
+  filter: blur(1px);
+  box-shadow: 0 0 14px rgba(255, 145, 64, .95), 0 0 34px rgba(206, 55, 35, .72);
+}
+.split-panel--left::after {
+  right: 45%;
+  transform: rotate(5deg);
+}
+.split-panel--right::after {
+  left: 45%;
+  transform: rotate(5deg);
+}
+
+/* The slash is a stylized light trail, not a realistic weapon movement. */
+.flame {
+  z-index: 9;
+  overflow: hidden;
+  isolation: isolate;
+  animation: flameOut .48s 1.2s forwards;
+}
+.flame__slash-svg {
+  position: absolute;
+  inset: -3%;
+  width: 106%;
+  height: 106%;
+  z-index: 4;
+  overflow: visible;
+  filter: url(#katanaSlashGlow);
+}
+.flame__slash {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: katanaSlashDraw .82s cubic-bezier(.18, .72, .22, 1) .04s forwards;
+}
+.flame__slash--outer {
+  stroke: rgba(202, 49, 32, .76);
+  stroke-width: 92;
+  filter: blur(15px);
+}
+.flame__slash--middle {
+  stroke: url(#katanaSlashGradient);
+  stroke-width: 34;
+  filter: drop-shadow(0 0 12px rgba(255, 131, 53, .95));
+}
+.flame__slash--core {
+  stroke: #fff4d8;
+  stroke-width: 7;
+  filter: drop-shadow(0 0 10px #fff0cf);
+}
+@keyframes katanaSlashDraw {
+  0% { stroke-dashoffset: 1; opacity: .15; }
+  12% { opacity: 1; }
+  78% { stroke-dashoffset: .08; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+/* Book leaf: keep the parent’s reverse face visible so its paper back renders. */
+.spreadwrap {
+  perspective: 2400px;
+  transform-style: preserve-3d;
+}
+.page-turn-sheet {
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
+  overflow: visible;
+  filter: drop-shadow(0 12px 17px rgba(28, 18, 10, .25));
+}
+.page-turn-sheet--forward .page-turn-sheet__front {
+  border-radius: 0 5px 5px 0;
+}
+.page-turn-sheet--forward .page-turn-sheet__back {
+  border-radius: 5px 0 0 5px;
+}
+.page-turn-sheet--backward .page-turn-sheet__front {
+  border-radius: 5px 0 0 5px;
+}
+.page-turn-sheet--backward .page-turn-sheet__back {
+  border-radius: 0 5px 5px 0;
+}
+.page-turn-sheet__face {
+  overflow: hidden;
+  border-color: rgba(103, 76, 49, .24);
+}
+.page-turn-sheet__front {
+  background:
+    radial-gradient(ellipse at 18% 10%, rgba(255, 255, 255, .62), transparent 48%),
+    repeating-linear-gradient(0deg, rgba(120, 90, 50, .045) 0 1px, transparent 1px 5px),
+    linear-gradient(100deg, #e6d8c1 0%, #f7efdf 21%, #eadcc6 100%);
+  box-shadow:
+    inset 12px 0 25px rgba(68, 45, 24, .14),
+    inset 0 0 0 1px rgba(255, 255, 255, .42);
+}
+.page-turn-sheet__back {
+  background:
+    radial-gradient(ellipse at 82% 12%, rgba(255, 255, 255, .55), transparent 45%),
+    repeating-linear-gradient(0deg, rgba(120, 90, 50, .04) 0 1px, transparent 1px 5px),
+    linear-gradient(95deg, #e4d6be 0%, #f6eddd 28%, #e6d8c0 100%);
+  box-shadow:
+    inset -12px 0 25px rgba(68, 45, 24, .13),
+    inset 0 0 0 1px rgba(255, 255, 255, .35);
+}
+.page-turn-sheet__stamp {
+  position: absolute;
+  top: 13%;
+  right: 10%;
+  color: rgba(174, 41, 45, .18);
+  font: 700 clamp(2rem, 5vw, 4rem) var(--serif);
+  letter-spacing: .18em;
+  writing-mode: vertical-rl;
+}
+.page-turn-sheet__ruled {
+  position: absolute;
+  inset: 18% 12% 22%;
+  opacity: .34;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 19px,
+    rgba(102, 79, 59, .22) 20px,
+    transparent 21px 27px
+  );
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.page-turn-sheet__folio {
+  position: absolute;
+  bottom: 7%;
+  left: 10%;
+  color: rgba(85, 68, 51, .45);
+  font: 600 .55rem var(--sans);
+  letter-spacing: .28em;
+}
+.page-turn-sheet__edge {
+  width: 4px;
+  opacity: .92;
+  background: linear-gradient(180deg, #b89761, #fff5df 45%, #9f8059);
+  box-shadow: 0 0 7px rgba(255, 238, 200, .55);
+}
+.page-turn-sheet--backward .page-turn-sheet__edge {
+  left: 0;
+  right: auto;
+}
+@media (max-width: 860px) {
+  .page-turn-sheet--forward,
+  .page-turn-sheet--backward {
+    left: 0;
+    width: 100%;
+    transform-origin: center center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flame__slash {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
