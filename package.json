@@ -1,7 +1,7 @@
 {
   "name": "shinto-the-way-of-the-kami",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,11 +11,13 @@
   "dependencies": {
     "framer-motion": "^11.11.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "three": "^0.160.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@types/three": "^0.160.0",
     "@vitejs/plugin-react": "^4.3.3",
     "typescript": "~5.6.3",
     "vite": "^5.4.10"

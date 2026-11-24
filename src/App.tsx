@@ -1,35 +1,37 @@
 import { useEffect, useState } from "react";
 import { MotionConfig } from "framer-motion";
-import IntroScene from "./components/IntroScene";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Section from "./components/Section";
-import Conclusion from "./components/Conclusion";
-import { sections } from "./data/shintoContent";
+import CinematicIntro from "./components/CinematicIntro";
+import Notebook from "./components/Notebook";
+import CherryBranches from "./components/CherryBranches";
+import CherryBlossomCanvas from "./components/CherryBlossomCanvas";
 
 export default function App() {
   const [intro, setIntro] = useState(true);
-  const [lite, setLite] = useState(false);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("lite", lite);
-  }, [lite]);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = intro ? "hidden" : "";
   }, [intro]);
 
+  useEffect(() => {
+    const f = (e: PointerEvent) => {
+      const s = document.documentElement.style;
+      s.setProperty("--cx", `${e.clientX}px`);
+      s.setProperty("--cy", `${e.clientY}px`);
+    };
+    window.addEventListener("pointermove", f, { passive: true });
+    return () => window.removeEventListener("pointermove", f);
+  }, []);
+
   return (
-    <MotionConfig reducedMotion={lite ? "always" : "user"}>
-      {intro && <IntroScene lite={lite} onDone={() => setIntro(false)} />}
-      <Navbar lite={lite} onToggleLite={() => setLite((v) => !v)} />
+    <MotionConfig reducedMotion="user">
+      <div className="glow" aria-hidden="true" />
       <main>
-        <Hero />
-        {sections.map((s) => (
-          <Section key={s.id} data={s} />
-        ))}
-        <Conclusion />
+        <Notebook ready={ready} />
       </main>
+      {intro && <CinematicIntro onReveal={() => setReady(true)} onDone={() => setIntro(false)} />}
+      <CherryBranches />
+      <CherryBlossomCanvas />
     </MotionConfig>
   );
 }
